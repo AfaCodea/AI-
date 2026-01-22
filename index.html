@@ -42,6 +42,23 @@
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    /* Input Focus Pulse Animation */
+    @keyframes focus-pulse {
+      0% {
+        box-shadow: 0 0 0 1px rgba(75, 85, 99, 0.5); /* Base ring */
+      }
+      50% {
+        box-shadow: 0 0 0 1px rgba(156, 163, 175, 0.8), 0 0 12px rgba(255, 255, 255, 0.1); /* Brighter ring + glow */
+      }
+      100% {
+        box-shadow: 0 0 0 1px rgba(75, 85, 99, 0.5); /* Back to base */
+      }
+    }
+
+    .input-pulse-animation:focus-within {
+      animation: focus-pulse 3s infinite ease-in-out;
+    }
   </style>
 <script type="importmap">
 {
@@ -57,7 +74,8 @@
     "@angular/common": "https://esm.sh/@angular/common@^21.1.1?external=rxjs",
     "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.1?external=rxjs",
     "@angular/core": "https://esm.sh/@angular/core@^21.1.1?external=rxjs",
-    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.1?external=rxjs"
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.1?external=rxjs",
+    "marked": "https://esm.sh/marked@15.0.0"
   }
 }
 </script>
