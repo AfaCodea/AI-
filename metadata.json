@@ -1,5 +1,7 @@
 {
   "name": "KONGKOW",
   "description": "KONGKOW is your chill AI companion. Hang out, chat, and explore ideas with a friendly, witty AI designed for casual conversation.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }

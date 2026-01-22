@@ -24,9 +24,68 @@ export class AppComponent implements AfterViewChecked {
   messages = signal<Message[]>([]);
   userInput = signal('');
   isLoading = signal(false);
+  isRecording = signal(false);
   
+  private recognition: any;
+
   // Initial welcome message
   constructor() {
+    this.messages.set([
+      { role: 'model', text: "Yo! Welcome to KONGKOW. I'm your AI buddy. What's on your mind? Let's chat!" }
+    ]);
+    this.initializeSpeechRecognition();
+  }
+
+  private initializeSpeechRecognition() {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = false;
+        this.recognition.interimResults = false;
+        this.recognition.lang = 'id-ID'; // Optimize for Indonesian/Mixed context
+        
+        this.recognition.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          this.userInput.update(current => {
+            const spacer = current && !current.endsWith(' ') ? ' ' : '';
+            return current + spacer + transcript;
+          });
+          this.isRecording.set(false);
+        };
+
+        this.recognition.onerror = (event: any) => {
+          console.error('Speech recognition error', event.error);
+          this.isRecording.set(false);
+        };
+
+        this.recognition.onend = () => {
+          this.isRecording.set(false);
+        };
+      }
+    }
+  }
+
+  toggleVoiceInput() {
+    if (!this.recognition) {
+      alert("Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.");
+      return;
+    }
+
+    if (this.isRecording()) {
+      this.recognition.stop();
+    } else {
+      try {
+        this.recognition.start();
+        this.isRecording.set(true);
+      } catch (e) {
+        console.error("Error starting recognition:", e);
+        this.isRecording.set(false);
+      }
+    }
+  }
+
+  clearChat() {
     this.messages.set([
       { role: 'model', text: "Yo! Welcome to KONGKOW. I'm your AI buddy. What's on your mind? Let's chat!" }
     ]);
