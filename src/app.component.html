@@ -1,0 +1,100 @@
+<div class="flex flex-col h-full bg-gray-900 relative overflow-hidden">
+  
+  <!-- Ambient Background Effects -->
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+  <!-- Header -->
+  <header class="glass-panel z-10 px-6 py-4 flex items-center justify-between sticky top-0 shadow-lg shadow-black/20">
+    <div class="flex items-center gap-3">
+      <div class="relative">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+          <span class="text-lg font-black text-white tracking-tighter">K</span>
+        </div>
+        <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-gray-900 rounded-full"></div>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-white tracking-tight">KONGKOW</h1>
+        <p class="text-xs text-gray-400 font-medium tracking-wide">AI Companion</p>
+      </div>
+    </div>
+    
+    <button class="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Chat Area -->
+  <main class="flex-1 overflow-hidden relative z-0">
+    <div #scrollContainer class="h-full overflow-y-auto px-4 sm:px-6 py-6 pb-4">
+      
+      <div class="max-w-3xl mx-auto flex flex-col justify-end min-h-full">
+        <!-- Messages Loop -->
+        @for (msg of messages(); track $index) {
+          <app-chat-message 
+            [content]="msg.text" 
+            [role]="msg.role">
+          </app-chat-message>
+        }
+
+        <!-- Loading Indicator -->
+        @if (isLoading()) {
+          <div class="flex w-full mb-6">
+            <div class="flex-shrink-0 mr-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                <span class="text-xs font-bold text-white">K</span>
+              </div>
+            </div>
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl rounded-tl-none px-5 py-4 shadow-md flex items-center gap-1.5 h-12">
+              <div class="typing-dot w-2 h-2 bg-gray-400 rounded-full"></div>
+              <div class="typing-dot w-2 h-2 bg-gray-400 rounded-full"></div>
+              <div class="typing-dot w-2 h-2 bg-gray-400 rounded-full"></div>
+            </div>
+          </div>
+        }
+        
+        <div class="h-4"></div> <!-- Spacer at bottom -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Input Area -->
+  <footer class="p-4 z-20">
+    <div class="max-w-3xl mx-auto">
+      <div class="glass-panel p-2 rounded-3xl flex items-end gap-2 shadow-2xl shadow-black/50">
+        
+        <button class="p-3 text-gray-400 hover:text-purple-400 transition-colors rounded-full hover:bg-white/5 hidden sm:block">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+          </svg>
+        </button>
+
+        <textarea
+          #inputField
+          [ngModel]="userInput()"
+          (ngModelChange)="userInput.set($event)"
+          (keydown)="handleKeydown($event)"
+          placeholder="Message Kongkow..."
+          class="w-full bg-transparent text-white placeholder-gray-500 border-none focus:ring-0 resize-none py-3 max-h-32 text-base"
+          rows="1"
+        ></textarea>
+        
+        <button 
+          (click)="sendMessage()" 
+          [disabled]="!userInput() && !isLoading()"
+          class="p-3 rounded-full bg-purple-600 text-white shadow-lg shadow-purple-600/30 hover:bg-purple-500 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex-shrink-0"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <div class="text-center mt-2">
+        <p class="text-[10px] text-gray-600">KONGKOW may produce inaccurate information about people, places, or facts.</p>
+      </div>
+    </div>
+  </footer>
+</div>
